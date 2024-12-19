@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 export default function App() {
-  const [message, setMessage] = useState<any>('Waiting for messages...');
+  const [message, setMessage] = useState<string>('Waiting for messages...');
 
   useEffect(() => {
     // Listen for messages from parent window
