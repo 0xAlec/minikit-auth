@@ -2,24 +2,35 @@
 
 import { useEffect, useState } from 'react';
 
+type ParentMessage = {
+  type: string;
+  payload?: any;
+};
+
+
 export default function App() {
   const [message, setMessage] = useState<string>('Waiting for messages...');
-
+  
   useEffect(() => {
-    // Listen for messages from parent window
-    const handleMessage = (event: MessageEvent) => {
+    const handleMessage = (event: MessageEvent<ParentMessage>) => {
+      // Add origin check for security
+      if (event.origin !== 'https://example-tma-app.vercel.app/' && event.origin !== 'http://localhost:3000') {
+        setMessage('Received message from unauthorized origin');
+        return;
+      }
+  
       setMessage(JSON.stringify(event.data, null, 2));
     };
-
+  
     window.addEventListener('message', handleMessage);
-
+  
     // Signal to parent that iframe is ready
-    window.parent.postMessage({ type: 'IFRAME_READY' }, '*');
-
-    // Cleanup listener on unmount
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
+    window.parent.postMessage(
+      { type: 'IFRAME_READY' },
+      'https://example-tma-app.vercel.app/' // Specify target origin for security
+    );
+  
+    return () => window.removeEventListener('message', handleMessage);
   }, []);
 
   return (
