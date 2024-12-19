@@ -5,6 +5,8 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
+    return NextResponse.json(data);
+
     if (!data.initData || !data.botId) {
       return NextResponse.json(
         { error: 'initData and botId are required' },
