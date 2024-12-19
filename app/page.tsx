@@ -2,17 +2,22 @@
 
 import { useEffect, useState } from 'react';
 
+const INITDATA = 'init_data';
+const PLATFORM = 'platform';
+
 export default function App() {
   const [message, setMessage] = useState<string>('Waiting for messages...');
 
   useEffect(() => {
     const fetchMessage = async () => {
       const searchParams = new URLSearchParams(window.location.search);
-      const callId = searchParams.get('call_id');
+      const initData = searchParams.get(INITDATA);
+      const platform = searchParams.get(PLATFORM);
 
-      setMessage(`Fetching message for call_id: ${callId}`);
+      setMessage(`initData: ${initData}, platform: ${platform}`);
+
       // try {
-      //   const response = await fetch(`/api/auth?call_id=${callId}`);
+      //   const response = await fetch(`/api/auth?${INITDATA}=${initData}&${PLATFORM}=${platform}`);
       //   if (!response.ok) {
       //     throw new Error('Network response was not ok');
       //   }
