@@ -5,16 +5,14 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
-    return NextResponse.json(data);
-
-    if (!data.initData || !data.botId) {
+    if (!data.init_data || !data.bot_id || !data.platform) {
       return NextResponse.json(
-        { error: 'initData and botId are required' },
+        { error: 'init_data, bot_id and platform are required' },
         { status: 400 }
       );
     }
 
-    await validate3rd(data.initData, data.botId);
+    await validate3rd(data.init_data, data.bot_id);
 
     return NextResponse.json({
       message: 'Success',
