@@ -7,17 +7,21 @@ export default function App() {
 
   useEffect(() => {
     const fetchMessage = async () => {
-      try {
-        const response = await fetch('/api/auth');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.text();
-        setMessage(data);
-      } catch (error) {
-        console.error('Error fetching message:', error);
-        setMessage('Error loading message');
-      }
+      const searchParams = new URLSearchParams(window.location.search);
+      const callId = searchParams.get('call_id');
+
+      setMessage(`Fetching message for call_id: ${callId}`);
+      // try {
+      //   const response = await fetch(`/api/auth?call_id=${callId}`);
+      //   if (!response.ok) {
+      //     throw new Error('Network response was not ok');
+      //   }
+      //   const data = await response.text();
+      //   setMessage(data);
+      // } catch (error) {
+      //   console.error('Error fetching message:', error);
+      //   setMessage('Error loading message');
+      // }
     };
 
     fetchMessage();
