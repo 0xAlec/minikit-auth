@@ -5,9 +5,14 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
-    if (!data.init_data || !data.bot_id || !data.platform) {
+    const missingFields = [];
+    if (!data.init_data) missingFields.push('init_data');
+    if (!data.bot_id) missingFields.push('bot_id');
+    if (!data.platform) missingFields.push('platform');
+
+    if (missingFields.length > 0) {
       return NextResponse.json(
-        { error: 'init_data, bot_id and platform are required' },
+        { error: `Missing required fields: ${missingFields.join(', ')}` },
         { status: 400 }
       );
     }

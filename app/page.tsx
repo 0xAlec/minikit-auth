@@ -15,7 +15,7 @@ export default function App() {
       const initData = searchParams.get(INITDATA);
       const platform = searchParams.get(PLATFORM);
       const botId = searchParams.get(BOT_ID);
-      setMessage(`waiting for api response...`);
+      setMessage(`sending init_data ${initData}, platform ${platform} and bot_id ${botId} to api...`);
 
       try {
         const response = await fetch('/api/auth', {
