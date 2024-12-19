@@ -27,7 +27,7 @@ export default function App() {
     // Signal to parent that iframe is ready
     window.parent.postMessage(
       { type: 'IFRAME_READY' },
-      'https://example-tma-app.vercel.app/' // Specify target origin for security
+      '*'
     );
   
     return () => window.removeEventListener('message', handleMessage);
