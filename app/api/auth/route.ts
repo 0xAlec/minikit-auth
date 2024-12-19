@@ -1,19 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { validate3rd } from '@telegram-apps/init-data-node';
 
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
-    if (!data.randomString) {
+    if (!data.initData || !data.botId) {
       return NextResponse.json(
-        { error: 'Random string is required' },
+        { error: 'initData and botId are required' },
         { status: 400 }
       );
     }
 
+    await validate3rd(data.initData, data.botId);
+
     return NextResponse.json({
       message: 'Success',
-      receivedString: data.randomString,
+      authenticated: 'true',
     });
   } catch (error: unknown) {
     return NextResponse.json(

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 const INITDATA = 'init_data';
 const PLATFORM = 'platform';
+const BOT_ID = 'bot_id';
 
 export default function App() {
   const [message, setMessage] = useState<string>('Waiting for messages...');
@@ -13,20 +14,27 @@ export default function App() {
       const searchParams = new URLSearchParams(window.location.search);
       const initData = searchParams.get(INITDATA);
       const platform = searchParams.get(PLATFORM);
+      const botId = searchParams.get(BOT_ID);
+      setMessage(`waiting for api response...`);
 
-      setMessage(`initData: ${initData}, platform: ${platform}`);
-
-      // try {
-      //   const response = await fetch(`/api/auth?${INITDATA}=${initData}&${PLATFORM}=${platform}`);
-      //   if (!response.ok) {
-      //     throw new Error('Network response was not ok');
-      //   }
-      //   const data = await response.text();
-      //   setMessage(data);
-      // } catch (error) {
-      //   console.error('Error fetching message:', error);
-      //   setMessage('Error loading message');
-      // }
+      try {
+        const response = await fetch('/api/auth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            [INITDATA]: initData,
+            [PLATFORM]: platform,
+            [BOT_ID]: botId,
+          }),
+        });
+        const data = await response.json();
+        setMessage(JSON.stringify(data));
+      } catch (error) {
+        console.error('Error fetching message:', error);
+        setMessage('Error loading message');
+      }
     };
 
     fetchMessage();
