@@ -7,7 +7,20 @@ const PLATFORM = 'platform';
 const BOT_ID = 'bot_id';
 
 export default function App() {
-  const [message, setMessage] = useState<string>('Waiting for messages...');
+  const [message, setMessage] = useState<string>('Loading...');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('randomValue');
+    if (stored) {
+      setMessage(stored);
+    } else {
+      const newValue = Math.random().toString(36).substring(2, 15);
+      localStorage.setItem('randomValue', newValue);
+      setMessage(newValue);
+    }
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const fetchMessage = async () => {
@@ -15,11 +28,6 @@ export default function App() {
       const initData = searchParams.get(INITDATA);
       const platform = searchParams.get(PLATFORM);
       const botId = searchParams.get(BOT_ID);
-
-      if (!initData || !platform || !botId) {
-        setMessage('Missing required fields');
-        return;
-      }
 
       try {
         const response = await fetch('/api/auth', {
@@ -34,15 +42,18 @@ export default function App() {
           }),
         });
         const data = await response.json();
-        setMessage(JSON.stringify(data, null, 2));
       } catch (error) {
         console.error('Error fetching message:', error);
         setMessage('Error loading message');
       }
     };
 
-    fetchMessage();
+    // fetchMessage();
   }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col min-h-screen font-sans dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 bg-white text-black dark:text-white">
