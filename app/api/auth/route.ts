@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validate3rd } from '@telegram-apps/init-data-node';
+import { parse, validate3rd } from '@telegram-apps/init-data-node';
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,9 +19,13 @@ export async function POST(request: NextRequest) {
 
     await validate3rd(data.init_data, data.bot_id);
 
+    const initData = parse(data.init_data);
+
     return NextResponse.json({
-      message: 'Success',
-      authenticated: 'true',
+      status: 'success',
+      user_name: initData.user?.username,
+      generated_at: initData.authDate,
+      authenticated_on: new Date().toISOString(),
     });
   } catch (error: unknown) {
     return NextResponse.json(
@@ -29,21 +33,4 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
-}
-
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const randomString = searchParams.get('string');
-
-  if (!randomString) {
-    return NextResponse.json(
-      { error: 'Random string is required as a query parameter' },
-      { status: 400 }
-    );
-  }
-
-  return NextResponse.json({
-    message: 'Success',
-    receivedString: randomString,
-  });
 }

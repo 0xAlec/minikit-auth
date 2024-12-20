@@ -15,7 +15,11 @@ export default function App() {
       const initData = searchParams.get(INITDATA);
       const platform = searchParams.get(PLATFORM);
       const botId = searchParams.get(BOT_ID);
-      setMessage(`sending init_data ${initData}, platform ${platform} and bot_id ${botId} to api...`);
+
+      if (!initData || !platform || !botId) {
+        setMessage('Missing required fields');
+        return;
+      }
 
       try {
         const response = await fetch('/api/auth', {
@@ -30,7 +34,7 @@ export default function App() {
           }),
         });
         const data = await response.json();
-        setMessage(JSON.stringify(data));
+        setMessage(JSON.stringify(data, null, 2));
       } catch (error) {
         console.error('Error fetching message:', error);
         setMessage('Error loading message');
