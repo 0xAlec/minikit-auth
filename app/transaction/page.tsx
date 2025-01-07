@@ -1,10 +1,24 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { createWalletClient, http, SendTransactionParameters, WalletClient } from 'viem'
+import { privateKeyToAccount } from 'viem/accounts'
+import { baseSepolia } from 'viem/chains';
 
 export default function TransactionPage() {
   const [address, setAddress] = useState<string | null>(null);
-  const [data, setData] = useState<object | null>(null);
+  const [data, setData] = useState<SendTransactionParameters | null>(null);
+  const [client, setClient] = useState<WalletClient | null>(null);
+  const [hash, setHash] = useState<string | null>(null);
+  useEffect(() => {
+    const account = privateKeyToAccount(localStorage.getItem('token') as `0x${string}`);
+    const client = createWalletClient({
+      account,
+      chain: baseSepolia,
+      transport: http(),
+    });
+    setClient(client);
+  }, []);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -32,8 +46,14 @@ export default function TransactionPage() {
               Signing with {address}
             </pre>
             <pre className="whitespace-pre-wrap break-words">{JSON.stringify(data, null, 2)}</pre>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Approve
+            {hash && <pre className="whitespace-pre-wrap break-words">Hash: {hash}</pre>}
+            <button onClick={async() => {
+                if (client && data) {
+                    const hash = await client.sendTransaction(data)
+                    setHash(hash)
+                }
+            }} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Sign
             </button>
           </div>
         </div>
