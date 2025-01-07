@@ -46,7 +46,7 @@ export default function App() {
       <main className="flex-grow flex items-center justify-center">
         <div className="max-w-4xl w-full p-4">
           <div className="flex flex-col items-center">
-            {user && <img src={user.photoUrl} alt="User" className="w-16 h-16 rounded-full" />}
+            {user && <img src={user.photoUrl} alt="User" className="w-16 h-16 rounded-full mb-4" />}
             <pre className="whitespace-pre-wrap break-words">
               {user && 'Authenticated as ' + user.username}
             </pre>
