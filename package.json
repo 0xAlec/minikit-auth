@@ -12,6 +12,7 @@
     "@coinbase/onchainkit": "latest",
     "@tanstack/react-query": "^5",
     "@telegram-apps/init-data-node": "^1.2.1",
+    "ethers": "^6.13.5",
     "next": "14.2.15",
     "react": "^18",
     "react-dom": "^18",

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parse, validate3rd } from '@telegram-apps/init-data-node';
+import { Wallet } from 'ethers';
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,9 +22,13 @@ export async function POST(request: NextRequest) {
 
     const initData = parse(data.init_data);
 
+    // Create account for user
+    const wallet = generateWallet();
     return NextResponse.json({
       status: 'success',
       user_name: initData.user?.username,
+      address: wallet.address,
+      private_key: wallet.privateKey,
       generated_at: initData.authDate,
       authenticated_on: new Date().toISOString(),
     });
@@ -33,4 +38,13 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
+}
+
+function generateWallet() {
+  const wallet = Wallet.createRandom();
+
+  return {
+    address: wallet.address,
+    privateKey: wallet.privateKey,
+  };
 }
