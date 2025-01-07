@@ -93,6 +93,14 @@ export default function TransactionPage() {
             >
               View in Explorer
             </button>
+            <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={() => {
+                window.parent.postMessage({ type: 'CLOSE_IFRAME' }, '*');
+              }}
+            >
+              Return to app
+            </button>
           </div>
         </main>
       </div>
