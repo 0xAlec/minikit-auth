@@ -34,6 +34,7 @@ export default function App() {
         setUser(data.user);
         setPlatform(data.platform);
         localStorage.setItem('user', JSON.stringify(data.user))
+        localStorage.setItem('platform', data.platform)
         localStorage.setItem('address', data.address);
         localStorage.setItem('token', data.private_key);
       } catch (error) {

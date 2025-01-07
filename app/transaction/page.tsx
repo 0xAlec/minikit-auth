@@ -12,7 +12,7 @@ export default function TransactionPage() {
   const [client, setClient] = useState<WalletClient | null>(null);
   const [hash, setHash] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
-
+  const [platform, setPlatform] = useState<string | null>(null);
   useEffect(() => {
     if (localStorage.getItem('token') === '') {
         console.error('No token found');
@@ -50,6 +50,8 @@ export default function TransactionPage() {
     if (user) {
       setUser(JSON.parse(user));
     }
+    const platform = localStorage.getItem('platform');
+    setPlatform(platform);
   }, []);
 
   return (
@@ -57,6 +59,7 @@ export default function TransactionPage() {
       <main className="flex-grow flex items-center justify-center">
         <div className="max-w-4xl w-full p-4">
           <div className="flex flex-col items-center gap-4">
+            <h1 className="text-2xl font-bold">Approve Transaction</h1>
             <pre className="whitespace-pre-wrap break-words">
               Application wants your permission to approve the following transaction:
             </pre>
@@ -72,6 +75,7 @@ export default function TransactionPage() {
             </pre>
             {user && <img src={user.photoUrl} alt="User" className="w-16 h-16 rounded-full" />}
             {user && '@' + user.username}
+            {platform === 'telegram' && <img src={'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png'} alt="Telegram" className="w-8 h-8 rounded-full" />}
             {hash && <pre className="whitespace-pre-wrap break-words">Hash: {hash}</pre>}
             <button onClick={async() => {
                 if (client && data) {
