@@ -55,6 +55,14 @@ export default function App() {
               {user && 'Authenticated as ' + user.username}
             </pre>
             {platform === 'telegram' && <img src={'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png'} alt="Telegram" className="w-8 h-8 rounded-full" />}
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={() => {
+                window.parent.postMessage({ type: 'CLOSE_IFRAME' }, '*');
+              }}
+            >
+              Return to app
+            </button>
           </div>
         </div>
       </main>
