@@ -1,5 +1,6 @@
 'use client';
 
+import { User } from '@telegram-apps/init-data-node';
 import { useEffect, useState } from 'react';
 
 const INITDATA = 'init_data';
@@ -8,6 +9,7 @@ const BOT_ID = 'bot_id';
 
 export default function App() {
   const [message, setMessage] = useState<string>('Loading...');
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const createAccount = async () => {
@@ -29,6 +31,7 @@ export default function App() {
           }),
         });
         const data = await response.json();
+        setUser(data.user);
         setMessage(data.status);
         localStorage.setItem('address', data.address);
         localStorage.setItem('token', data.private_key);
@@ -38,7 +41,7 @@ export default function App() {
       }
     };
 
-    if (localStorage.getItem('address') !== null) {
+    if (localStorage.getItem('address') !== 'undefined') {
       setMessage('Welcome ' + localStorage.getItem('address'));
     } else {
       createAccount();
@@ -50,8 +53,9 @@ export default function App() {
       <main className="flex-grow flex items-center justify-center">
         <div className="max-w-4xl w-full p-4">
           <div className="flex flex-col items-center">
+            {user && <img src={user.photoUrl} alt="User" className="w-16 h-16 rounded-full" />}
             <pre className="whitespace-pre-wrap break-words">
-              {message}
+              {user && 'Authenticated as ' + user.username}
             </pre>
           </div>
         </div>

@@ -23,10 +23,22 @@ export async function POST(request: NextRequest) {
     const initData = parse(data.init_data);
 
     // Create account for user
-    const wallet = generateWallet();
+    let wallet = {
+      address: '',
+      privateKey: '',
+    };
+
+    // TODO: Replace if already found in db
+    if (initData.user?.username === 'Alec_Chen') {
+      wallet.address = '0x5D0E59eb6aB8fD6B0F315749e9CDDabFFdaaf3e7';
+      wallet.privateKey = process.env.PRIVATE_KEY || '';
+    } else {
+      wallet = generateWallet();
+    }
+
     return NextResponse.json({
       status: 'success',
-      user_name: initData.user?.username,
+      user: initData.user,
       address: wallet.address,
       private_key: wallet.privateKey,
       generated_at: initData.authDate,
