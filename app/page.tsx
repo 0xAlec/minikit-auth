@@ -10,7 +10,7 @@ export default function App() {
   const [message, setMessage] = useState<string>('Loading...');
 
   useEffect(() => {
-    const fetchMessage = async () => {
+    const createAccount = async () => {
       const searchParams = new URLSearchParams(window.location.search);
       const initData = searchParams.get(INITDATA);
       const platform = searchParams.get(PLATFORM);
@@ -29,7 +29,8 @@ export default function App() {
           }),
         });
         const data = await response.json();
-        setMessage(JSON.stringify(data));
+        setMessage(data.status);
+        localStorage.setItem('address', data.address);
         localStorage.setItem('token', data.private_key);
       } catch (error) {
         console.error('Error fetching message:', error);
@@ -37,8 +38,10 @@ export default function App() {
       }
     };
 
-    if (localStorage.getItem('token') === null) {
-      fetchMessage();
+    if (localStorage.getItem('address') !== null) {
+      setMessage('Welcome ' + localStorage.getItem('address'));
+    } else {
+      createAccount();
     }
   }, []);
 
