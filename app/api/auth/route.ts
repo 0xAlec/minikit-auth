@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       status: 'success',
+      platform: data.platform,
       user: initData.user,
       address: wallet.address,
       private_key: wallet.privateKey,
