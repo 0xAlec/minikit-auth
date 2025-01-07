@@ -4,11 +4,16 @@ import { useEffect, useState } from 'react';
 
 export default function TransactionPage() {
   const [address, setAddress] = useState<string | null>(null);
+  const [data, setData] = useState<string | null>(null);
 
   useEffect(() => {
-    // const searchParams = new URLSearchParams(window.location.search);
-    // const data = searchParams.get('data');
-
+    const searchParams = new URLSearchParams(window.location.search);
+    const encodedData = searchParams.get('data');
+    if (encodedData) {
+      const decodedData = JSON.parse(decodeURIComponent(encodedData));
+      setData(decodedData);
+    }
+    
     const address = localStorage.getItem('address');
     setAddress(address);
   }, []);
@@ -21,6 +26,7 @@ export default function TransactionPage() {
             <pre className="whitespace-pre-wrap break-words">
               Signing with {address}
             </pre>
+            {data}
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Approve
             </button>
