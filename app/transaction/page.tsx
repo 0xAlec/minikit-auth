@@ -13,6 +13,9 @@ export default function TransactionPage() {
   const [hash, setHash] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [platform, setPlatform] = useState<string | null>(null);
+  const [transactionStatus, setTransactionStatus] = useState<string>('idle');
+  const [showSuccess, setShowSuccess] = useState(false);
+
   useEffect(() => {
     if (localStorage.getItem('token') === '') {
         console.error('No token found');
@@ -54,6 +57,48 @@ export default function TransactionPage() {
     setPlatform(platform);
   }, []);
 
+  useEffect(() => {
+    if (transactionStatus === 'success') {
+      const timer = setTimeout(() => {
+        setShowSuccess(true);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [transactionStatus]);
+
+  if (transactionStatus === 'success') {
+    if (!showSuccess) {
+      return (
+        <div className="flex flex-col min-h-screen font-sans dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 bg-white text-black dark:text-white">
+          <main className="flex-grow flex items-center justify-center">
+            <div className="animate-spin h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full"/>
+          </main>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex flex-col min-h-screen font-sans dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 bg-white text-black dark:text-white">
+        <main className="flex-grow flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4 p-4 text-center">
+            <h1 className="text-2xl font-bold">Transaction Successful</h1>
+            <pre className="whitespace-pre-wrap break-words">
+              The transaction has been successfully approved. You can now close this window.
+            </pre>
+            <button 
+              onClick={() => {
+                window.open(`https://sepolia.basescan.org/tx/${hash}`, '_blank');
+              }}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              View in Explorer
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen font-sans dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 bg-white text-black dark:text-white">
       <main className="flex-grow flex items-center justify-center">
@@ -76,14 +121,26 @@ export default function TransactionPage() {
             {user && <img src={user.photoUrl} alt="User" className="w-16 h-16 rounded-full" />}
             {user && '@' + user.username}
             {platform === 'telegram' && <img src={'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png'} alt="Telegram" className="w-8 h-8 rounded-full" />}
-            {hash && <pre className="whitespace-pre-wrap break-words">Hash: {hash}</pre>}
-            <button onClick={async() => {
+            <button 
+              onClick={async() => {
                 if (client && data) {
+                    setTransactionStatus('pending');
                     const hash = await client.sendTransaction(data)
                     setHash(hash)
+                    setTransactionStatus('success');
                 }
-            }} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Approve
+              }}
+              disabled={transactionStatus !== 'idle'}
+              className={`font-bold py-2 px-4 rounded flex items-center gap-2 ${
+                transactionStatus === 'idle' 
+                  ? 'bg-blue-500 hover:bg-blue-700 text-white'
+                  : 'bg-blue-500 opacity-50 cursor-not-allowed text-white'
+              }`}
+            >
+              {transactionStatus === 'pending' && (
+                <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"/>
+              )}
+              {transactionStatus === 'pending' ? 'Loading...' : 'Approve'}
             </button>
           </div>
         </div>
