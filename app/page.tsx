@@ -8,11 +8,10 @@ const PLATFORM = 'platform';
 const BOT_ID = 'bot_id';
 
 export default function App() {
-  const [message, setMessage] = useState<string>('Loading...');
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const createAccount = async () => {
+    const authenticate = async () => {
       const searchParams = new URLSearchParams(window.location.search);
       const initData = searchParams.get(INITDATA);
       const platform = searchParams.get(PLATFORM);
@@ -32,20 +31,14 @@ export default function App() {
         });
         const data = await response.json();
         setUser(data.user);
-        setMessage(data.status);
         localStorage.setItem('address', data.address);
         localStorage.setItem('token', data.private_key);
       } catch (error) {
         console.error('Error fetching message:', error);
-        setMessage('Error loading message');
       }
     };
 
-    if (localStorage.getItem('address') !== 'undefined') {
-      setMessage('Welcome ' + localStorage.getItem('address'));
-    } else {
-      createAccount();
-    }
+    authenticate();
   }, []);
 
   return (
