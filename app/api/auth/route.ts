@@ -85,7 +85,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       status: 'success',
       platform: data.platform,
-      user: { fid },
+      user: {
+        fid,
+        photoUrl: data['warpcast_photo'],
+        username: data['warpcast_username'],
+      },
       address: wallet.address,
       private_key: wallet.privateKey,
       authenticated_on: new Date().toISOString(),

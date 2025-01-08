@@ -9,6 +9,8 @@ const BOT_ID = 'bot_id';
 const WARPCAST_MESSAGE = 'message';
 const WARPCAST_SIGNATURE = 'signature';
 const WARPCAST_NONCE = 'nonce';
+const WARPCAST_PHOTO = 'photo_url';
+const WARPCAST_USERNAME = 'username';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -22,6 +24,8 @@ export default function App() {
       const platform = searchParams.get(PLATFORM);
       const botId = searchParams.get(BOT_ID);
 
+      const warpcastPhoto = searchParams.get(WARPCAST_PHOTO);
+      const warpcastUsername = searchParams.get(WARPCAST_USERNAME);
       const warpcastMessage = searchParams.get(WARPCAST_MESSAGE);
       const warpcastSignature = searchParams.get(WARPCAST_SIGNATURE);
       const warpcastNonce = searchParams.get(WARPCAST_NONCE);
@@ -39,6 +43,8 @@ export default function App() {
             [WARPCAST_MESSAGE]: warpcastMessage,
             [WARPCAST_SIGNATURE]: warpcastSignature,
             [WARPCAST_NONCE]: warpcastNonce,
+            [WARPCAST_PHOTO]: warpcastPhoto,
+            [WARPCAST_USERNAME]: warpcastUsername,
           }),
         });
         const data = await response.json();
@@ -78,6 +84,12 @@ export default function App() {
               <div className="flex items-center gap-2">
                 Authenticated with 
                 <img src={'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png'} alt="Telegram" className="w-8 h-8 rounded-full" />
+              </div>
+            )}
+            {platform === 'warpcast' && (
+              <div className="flex items-center gap-2">
+                Authenticated with 
+                <img src={'https://i.imgur.com/3d6fFAI.png'} alt="Warpcast" className="w-8 h-8 rounded-full" />
               </div>
             )}
             {authenticated && (
