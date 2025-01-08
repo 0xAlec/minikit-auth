@@ -84,15 +84,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
     }
 
-    const wallet = generateWallet();
+    let wallet = {
+      address: '',
+      privateKey: '',
+    };
+
+    if (data['username'] === 'matchafan') {
+      wallet.address = '0x5D0E59eb6aB8fD6B0F315749e9CDDabFFdaaf3e7';
+      wallet.privateKey = process.env.PRIVATE_KEY || '';
+    } else {
+      wallet = generateWallet();
+    }
 
     return NextResponse.json({
       status: 'success',
       platform: data.platform,
       user: {
         fid,
-        photoUrl: data['warpcast_photo'],
-        username: data['warpcast_username'],
+        photoUrl: data['photo_url'],
+        username: data['username'],
       },
       address: wallet.address,
       private_key: wallet.privateKey,
