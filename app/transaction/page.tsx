@@ -88,17 +88,18 @@ export default function TransactionPage() {
             <pre className="whitespace-pre-wrap break-words">
               The transaction has been successfully approved. You can now close this window.
             </pre>
-            <button 
+            {/* <button 
               onClick={() => {
                 window.open(`https://sepolia.basescan.org/tx/${hash}`, '_blank');
               }}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
               View in Explorer
-            </button>
+            </button> */}
             <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               onClick={() => {
+                window.parent.postMessage({ type: 'TRANSACTION_SUCCESS', hash: hash }, '*');
                 window.parent.postMessage({ type: 'CLOSE_IFRAME' }, '*');
               }}
             >
