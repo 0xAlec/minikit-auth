@@ -71,7 +71,10 @@ export default function TransactionPage() {
       return (
         <div className="flex flex-col min-h-screen font-sans dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 bg-white text-black dark:text-white">
           <main className="flex-grow flex items-center justify-center">
-            <div className="animate-spin h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full"/>
+            <div className="flex flex-col items-center gap-4">
+              <h1 className="text-2xl font-bold">Transaction Pending...</h1>
+              <div className="animate-spin h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full"/>
+            </div>
           </main>
         </div>
       );
