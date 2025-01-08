@@ -8,7 +8,6 @@ const PLATFORM = 'platform';
 const BOT_ID = 'bot_id';
 const WARPCAST_MESSAGE = 'message';
 const WARPCAST_SIGNATURE = 'signature';
-const WARPCAST_DOMAIN = 'warpcast.com';
 const WARPCAST_NONCE = 'nonce';
 
 export default function App() {
@@ -25,7 +24,6 @@ export default function App() {
 
       const warpcastMessage = searchParams.get(WARPCAST_MESSAGE);
       const warpcastSignature = searchParams.get(WARPCAST_SIGNATURE);
-      const warpcastDomain = searchParams.get(WARPCAST_DOMAIN);
       const warpcastNonce = searchParams.get(WARPCAST_NONCE);
       
       try {
@@ -40,7 +38,6 @@ export default function App() {
             [BOT_ID]: botId,
             [WARPCAST_MESSAGE]: warpcastMessage,
             [WARPCAST_SIGNATURE]: warpcastSignature,
-            [WARPCAST_DOMAIN]: warpcastDomain,
             [WARPCAST_NONCE]: warpcastNonce,
           }),
         });
