@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@coinbase/onchainkit": "latest",
+    "@farcaster/auth-client": "^0.3.0",
     "@tanstack/react-query": "^5",
     "@telegram-apps/init-data-node": "^1.2.1",
     "ethers": "^6.13.5",

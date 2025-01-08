@@ -1,25 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parse, validate3rd } from '@telegram-apps/init-data-node';
+import { createAppClient, viemConnector } from '@farcaster/auth-client';
 import { Wallet } from 'ethers';
 
 export async function POST(request: NextRequest) {
-  try {
-    const data = await request.json();
+  const data = await request.json();
 
-    const missingFields = [];
-    if (!data.init_data) missingFields.push('init_data');
-    if (!data.bot_id) missingFields.push('bot_id');
-    if (!data.platform) missingFields.push('platform');
+  const missingFields = [];
+  if (!data.init_data) missingFields.push('init_data');
+  if (!data.platform) missingFields.push('platform');
 
-    if (missingFields.length > 0) {
+  if (missingFields.length > 0) {
+    return NextResponse.json(
+      { error: `Missing required fields: ${missingFields.join(', ')}` },
+      { status: 400 }
+    );
+  }
+
+  if (data.platform === 'telegram') {
+    // Attempt to validate init data
+    try {
+      await validate3rd(data.init_data, data.bot_id);
+    } catch (error) {
       return NextResponse.json(
-        { error: `Missing required fields: ${missingFields.join(', ')}` },
+        { error: error instanceof Error ? error.message : 'Unknown error' },
         { status: 400 }
       );
     }
-
-    await validate3rd(data.init_data, data.bot_id);
-
+    // Parse init data
     const initData = parse(data.init_data);
 
     // Create account for user
@@ -42,14 +50,35 @@ export async function POST(request: NextRequest) {
       user: initData.user,
       address: wallet.address,
       private_key: wallet.privateKey,
-      generated_at: initData.authDate,
       authenticated_on: new Date().toISOString(),
     });
-  } catch (error: unknown) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 400 }
-    );
+  }
+  if (data.platform === 'warpcast') {
+    const appClient = createAppClient({
+      ethereum: viemConnector(),
+    });
+
+    const verifyResponse = await appClient.verifySignInMessage({
+      message: data['warpcast_message'] as string,
+      signature: data['warpcast_signature'] as `0x${string}`,
+      domain: 'example-tma-app.vercel.app',
+      nonce: data['warpcast_nonce'] as string,
+    });
+    const { success, fid } = verifyResponse;
+    if (!success) {
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+    }
+
+    const wallet = generateWallet();
+
+    return NextResponse.json({
+      status: 'success',
+      platform: data.platform,
+      user: { fid },
+      address: wallet.address,
+      private_key: wallet.privateKey,
+      authenticated_on: new Date().toISOString(),
+    });
   }
 }
 

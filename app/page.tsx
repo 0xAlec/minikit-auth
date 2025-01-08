@@ -6,6 +6,10 @@ import { useEffect, useState } from 'react';
 const INITDATA = 'init_data';
 const PLATFORM = 'platform';
 const BOT_ID = 'bot_id';
+const WARPCAST_MESSAGE = 'message';
+const WARPCAST_SIGNATURE = 'signature';
+const WARPCAST_DOMAIN = 'warpcast.com';
+const WARPCAST_NONCE = 'nonce';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -19,6 +23,11 @@ export default function App() {
       const platform = searchParams.get(PLATFORM);
       const botId = searchParams.get(BOT_ID);
 
+      const warpcastMessage = searchParams.get(WARPCAST_MESSAGE);
+      const warpcastSignature = searchParams.get(WARPCAST_SIGNATURE);
+      const warpcastDomain = searchParams.get(WARPCAST_DOMAIN);
+      const warpcastNonce = searchParams.get(WARPCAST_NONCE);
+      
       try {
         const response = await fetch('/api/auth', {
           method: 'POST',
@@ -29,6 +38,10 @@ export default function App() {
             [INITDATA]: initData,
             [PLATFORM]: platform,
             [BOT_ID]: botId,
+            [WARPCAST_MESSAGE]: warpcastMessage,
+            [WARPCAST_SIGNATURE]: warpcastSignature,
+            [WARPCAST_DOMAIN]: warpcastDomain,
+            [WARPCAST_NONCE]: warpcastNonce,
           }),
         });
         const data = await response.json();
