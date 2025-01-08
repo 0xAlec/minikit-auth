@@ -19,12 +19,16 @@ export default function App() {
 
   useEffect(() => {
     const authenticate = async () => {
+      if (platform === 'unknown') {
+        return;
+      }
+
       const searchParams = new URLSearchParams(window.location.search);
       const initData = searchParams.get(INITDATA);
-      const platform = searchParams.get(PLATFORM);
+      const _platform = searchParams.get(PLATFORM);
 
-      if (platform) {
-        setPlatform(platform);
+      if (_platform) {
+        setPlatform(_platform);
       }
 
       const botId = searchParams.get(BOT_ID);
@@ -43,7 +47,7 @@ export default function App() {
           },
           body: JSON.stringify({
             [INITDATA]: initData,
-            [PLATFORM]: platform,
+            [PLATFORM]: _platform,
             [BOT_ID]: botId,
             [WARPCAST_MESSAGE]: warpcastMessage,
             [WARPCAST_SIGNATURE]: warpcastSignature,
@@ -67,7 +71,7 @@ export default function App() {
     };
 
     authenticate();
-  }, []);
+  }, [platform]);
 
   useEffect(() => {
     if (authenticated) {

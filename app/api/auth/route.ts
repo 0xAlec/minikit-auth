@@ -61,6 +61,7 @@ export async function POST(request: NextRequest) {
     if (!data['warpcast_nonce']) missingFields.push('warpcast_nonce');
 
     if (missingFields.length > 0) {
+      console.log('Missing fields in Warpcast auth:', missingFields);
       return NextResponse.json(
         { error: `Missing required fields: ${missingFields.join(', ')}` },
         { status: 400 }
@@ -79,6 +80,7 @@ export async function POST(request: NextRequest) {
     });
     const { success, fid } = verifyResponse;
     if (!success) {
+      console.log('Unsuccessful Warpcast signature');
       return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
     }
 
