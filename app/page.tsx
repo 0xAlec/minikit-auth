@@ -62,9 +62,14 @@ export default function App() {
           <div className="flex flex-col items-center gap-4">
             {user && <img src={user.photoUrl} alt="User" className="w-16 h-16 rounded-full" />}
             <pre className="whitespace-pre-wrap break-words">
-              {user && 'Authenticated as ' + user.username}
+              {user && '@' + user.username}
             </pre>
-            {platform === 'telegram' && <img src={'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png'} alt="Telegram" className="w-8 h-8 rounded-full" />}
+            {platform === 'telegram' && (
+              <div className="flex items-center gap-2">
+                Authenticated with 
+                <img src={'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png'} alt="Telegram" className="w-8 h-8 rounded-full" />
+              </div>
+            )}
             {authenticated && (
               <div className="flex items-center gap-2">
                 <div className="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full"/>
