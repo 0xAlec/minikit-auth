@@ -54,7 +54,9 @@ export default function App() {
         localStorage.setItem('platform', data.platform)
         localStorage.setItem('address', data.address);
         localStorage.setItem('token', data.private_key);
-        setAuthenticated(true);
+        if (data.status === 'success') {
+          setAuthenticated(true);
+        }
       } catch (error) {
         console.error('Error fetching message:', error);
       }
@@ -76,6 +78,8 @@ export default function App() {
       <main className="flex-grow flex items-center justify-center">
         <div className="max-w-4xl w-full p-4">
           <div className="flex flex-col items-center gap-4">
+            { user && JSON.stringify(user) }
+            { platform }
             {user && <img src={user.photoUrl} alt="User" className="w-16 h-16 rounded-full" />}
             <pre className="whitespace-pre-wrap break-words">
               {user && '@' + user.username}
