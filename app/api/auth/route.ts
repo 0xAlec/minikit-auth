@@ -5,19 +5,19 @@ import { Wallet } from 'ethers';
 
 export async function POST(request: NextRequest) {
   const data = await request.json();
-
   const missingFields = [];
-  if (!data.init_data) missingFields.push('init_data');
-  if (!data.platform) missingFields.push('platform');
-
-  if (missingFields.length > 0) {
-    return NextResponse.json(
-      { error: `Missing required fields: ${missingFields.join(', ')}` },
-      { status: 400 }
-    );
-  }
 
   if (data.platform === 'telegram') {
+    if (!data.init_data) missingFields.push('init_data');
+    if (!data.platform) missingFields.push('platform');
+
+    if (missingFields.length > 0) {
+      return NextResponse.json(
+        { error: `Missing required fields: ${missingFields.join(', ')}` },
+        { status: 400 }
+      );
+    }
+
     // Attempt to validate init data
     try {
       await validate3rd(data.init_data, data.bot_id);
@@ -54,6 +54,17 @@ export async function POST(request: NextRequest) {
     });
   }
   if (data.platform === 'warpcast') {
+    if (!data['warpcast_message']) missingFields.push('warpcast_message');
+    if (!data['warpcast_signature']) missingFields.push('warpcast_signature');
+    if (!data['warpcast_nonce']) missingFields.push('warpcast_nonce');
+
+    if (missingFields.length > 0) {
+      return NextResponse.json(
+        { error: `Missing required fields: ${missingFields.join(', ')}` },
+        { status: 400 }
+      );
+    }
+
     const appClient = createAppClient({
       ethereum: viemConnector(),
     });
