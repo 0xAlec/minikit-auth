@@ -36,22 +36,25 @@ export default function App() {
       const warpcastNonce = searchParams.get(WARPCAST_NONCE);
       
       try {
-        const response = await fetch('/api/auth', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            [INITDATA]: initData,
-            [PLATFORM]: _platform,
-            [BOT_ID]: botId,
-            [WARPCAST_MESSAGE]: warpcastMessage,
-            [WARPCAST_SIGNATURE]: warpcastSignature,
-            [WARPCAST_NONCE]: warpcastNonce,
-            [WARPCAST_PHOTO]: warpcastPhoto,
-            [WARPCAST_USERNAME]: warpcastUsername,
+        const [response] = await Promise.all([
+          fetch('/api/auth', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              [INITDATA]: initData,
+              [PLATFORM]: _platform,
+              [BOT_ID]: botId,
+              [WARPCAST_MESSAGE]: warpcastMessage,
+              [WARPCAST_SIGNATURE]: warpcastSignature,
+              [WARPCAST_NONCE]: warpcastNonce,
+              [WARPCAST_PHOTO]: warpcastPhoto,
+              [WARPCAST_USERNAME]: warpcastUsername,
+            }),
           }),
-        });
+          new Promise(resolve => setTimeout(resolve, 1500)) // 1.5 second minimum timeout
+        ]);
         const data = await response.json();
         setUser(data.user);
         localStorage.setItem('user', JSON.stringify(data.user))
@@ -82,6 +85,7 @@ export default function App() {
       <main className="flex-grow flex items-center justify-center">
         <div className="max-w-4xl w-full p-4">
           <div className="flex flex-col items-center gap-4">
+            {authenticated && <h1 className="text-2xl font-bold">Logged in as</h1>}
             {user && <img src={user.photoUrl} alt="User" className="w-16 h-16 rounded-full" />}
             <pre className="whitespace-pre-wrap break-words">
               {user && '@' + user.username}
