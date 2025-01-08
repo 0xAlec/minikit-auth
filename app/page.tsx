@@ -10,6 +10,7 @@ const BOT_ID = 'bot_id';
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [platform, setPlatform] = useState<string>('unknown');
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
     const authenticate = async () => {
@@ -37,6 +38,7 @@ export default function App() {
         localStorage.setItem('platform', data.platform)
         localStorage.setItem('address', data.address);
         localStorage.setItem('token', data.private_key);
+        setAuthenticated(true);
       } catch (error) {
         console.error('Error fetching message:', error);
       }
@@ -44,6 +46,14 @@ export default function App() {
 
     authenticate();
   }, []);
+
+  useEffect(() => {
+    if (authenticated) {
+      setTimeout(() => {
+        window.parent.postMessage({ type: 'CLOSE_IFRAME' }, '*');
+      }, 2500);
+    }
+  }, [authenticated]);
 
   return (
     <div className="flex flex-col min-h-screen font-sans dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 bg-white text-black dark:text-white">
@@ -55,14 +65,12 @@ export default function App() {
               {user && 'Authenticated as ' + user.username}
             </pre>
             {platform === 'telegram' && <img src={'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png'} alt="Telegram" className="w-8 h-8 rounded-full" />}
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={() => {
-                window.parent.postMessage({ type: 'CLOSE_IFRAME' }, '*');
-              }}
-            >
-              Return to app
-            </button>
+            {authenticated && (
+              <div className="flex items-center gap-2">
+                <div className="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full"/>
+                Returning to app...
+              </div>
+            )}
           </div>
         </div>
       </main>
