@@ -82,22 +82,26 @@ export default function App() {
       <main className="flex-grow flex items-center justify-center">
         <div className="max-w-4xl w-full p-4">
           <div className="flex flex-col items-center gap-4">
-            { user && JSON.stringify(user) }
-            { platform }
             {user && <img src={user.photoUrl} alt="User" className="w-16 h-16 rounded-full" />}
             <pre className="whitespace-pre-wrap break-words">
               {user && '@' + user.username}
             </pre>
-            {platform === 'telegram' && (
+            {!authenticated && platform === 'telegram' && (
               <div className="flex items-center gap-2">
-                Authenticated with 
+                Authenticating with 
                 <img src={'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png'} alt="Telegram" className="w-8 h-8 rounded-full" />
               </div>
             )}
-            {platform === 'warpcast' && (
+            {!authenticated && platform === 'warpcast' && (
               <div className="flex items-center gap-2">
-                Authenticated with 
+                Authenticating with 
                 <img src={'https://i.imgur.com/3d6fFAI.png'} alt="Warpcast" className="w-8 h-8 rounded-full" />
+              </div>
+            )}
+            {!authenticated && (
+              <div className="flex items-center gap-2">
+                <div className="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full"/>
+                Loading...
               </div>
             )}
             {authenticated && (
