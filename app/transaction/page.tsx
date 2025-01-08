@@ -129,14 +129,26 @@ export default function TransactionPage() {
             )}
             {user && <img src={user.photoUrl} alt="User" className="w-16 h-16 rounded-full" />}
             {user && '@' + user.username}
-            {platform === 'telegram' && (
-              <div className="flex items-center gap-2">
-                <pre className="whitespace-pre-wrap break-words">
-                  Signing with
-                </pre>
-                <img src={'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png'} alt="Telegram" className="w-8 h-8 rounded-full" />
-              </div>
-            )}
+            {
+                platform === 'telegram' && (
+                    <div className="flex items-center gap-2">
+                        <pre className="whitespace-pre-wrap break-words">
+                            Signing with
+                        </pre>
+                        <img src={'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png'} alt="Telegram" className="w-8 h-8 rounded-full" />
+                    </div>
+                )
+            }
+            {
+                platform === 'warpcast' && (
+                    <div className="flex items-center gap-2">
+                        <pre className="whitespace-pre-wrap break-words">
+                            Signing with
+                        </pre>
+                        <img src={'https://i.imgur.com/3d6fFAI.png'} alt="Warpcast" className="w-8 h-8 rounded-full" />
+                    </div>
+                )
+            }
             <button 
               onClick={async() => {
                 if (client && data) {
