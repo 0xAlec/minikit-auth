@@ -22,6 +22,11 @@ export default function App() {
       const searchParams = new URLSearchParams(window.location.search);
       const initData = searchParams.get(INITDATA);
       const platform = searchParams.get(PLATFORM);
+
+      if (platform) {
+        setPlatform(platform);
+      }
+
       const botId = searchParams.get(BOT_ID);
 
       const warpcastPhoto = searchParams.get(WARPCAST_PHOTO);
@@ -49,7 +54,6 @@ export default function App() {
         });
         const data = await response.json();
         setUser(data.user);
-        setPlatform(data.platform);
         localStorage.setItem('user', JSON.stringify(data.user))
         localStorage.setItem('platform', data.platform)
         localStorage.setItem('address', data.address);

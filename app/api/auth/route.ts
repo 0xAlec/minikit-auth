@@ -7,6 +7,8 @@ export async function POST(request: NextRequest) {
   const data = await request.json();
   const missingFields = [];
 
+  console.log(data);
+
   if (data.platform === 'telegram') {
     if (!data.init_data) missingFields.push('init_data');
     if (!data.platform) missingFields.push('platform');
