@@ -56,9 +56,9 @@ export async function POST(request: NextRequest) {
     });
   }
   if (data.platform === 'warpcast') {
-    if (!data['warpcast_message']) missingFields.push('warpcast_message');
-    if (!data['warpcast_signature']) missingFields.push('warpcast_signature');
-    if (!data['warpcast_nonce']) missingFields.push('warpcast_nonce');
+    if (!data['message']) missingFields.push('message');
+    if (!data['signature']) missingFields.push('signature');
+    if (!data['nonce']) missingFields.push('nonce');
 
     if (missingFields.length > 0) {
       console.log('Missing fields in Warpcast auth:', missingFields);
@@ -73,10 +73,10 @@ export async function POST(request: NextRequest) {
     });
 
     const verifyResponse = await appClient.verifySignInMessage({
-      message: data['warpcast_message'] as string,
-      signature: data['warpcast_signature'] as `0x${string}`,
+      message: data['message'] as string,
+      signature: data['signature'] as `0x${string}`,
       domain: 'example-tma-app.vercel.app',
-      nonce: data['warpcast_nonce'] as string,
+      nonce: data['nonce'] as string,
     });
     const { success, fid } = verifyResponse;
     if (!success) {
