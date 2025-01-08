@@ -19,10 +19,6 @@ export default function App() {
 
   useEffect(() => {
     const authenticate = async () => {
-      if (platform === 'unknown') {
-        return;
-      }
-
       const searchParams = new URLSearchParams(window.location.search);
       const initData = searchParams.get(INITDATA);
       const _platform = searchParams.get(PLATFORM);
@@ -71,7 +67,7 @@ export default function App() {
     };
 
     authenticate();
-  }, [platform]);
+  }, []);
 
   useEffect(() => {
     if (authenticated) {
